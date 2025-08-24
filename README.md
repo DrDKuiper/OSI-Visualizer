@@ -91,16 +91,172 @@ Um visualizador interativo do modelo OSI que captura e analisa pacotes de rede e
    
    O frontend estará disponível em `http://localhost:3000`
 
-## 📖 Como Usar
+## 🧪 Como Testar
 
-1. **Acesse a aplicação** em `http://localhost:3000`
-2. **Aguarde a captura automática** de pacotes da rede
-3. **Clique em um pacote** na tabela para ver as camadas OSI ativas
-4. **Use os controles** para:
-   - Pausar/continuar a atualização automática
-   - Ajustar o intervalo de refresh
-   - Filtrar pacotes por protocolo
-   - Ordenar por diferentes critérios
+### 🚀 Teste Rápido (Automatizado)
+
+**Windows:**
+```bash
+# Execute como Administrador
+test.bat
+```
+
+**Linux/macOS:**
+```bash
+# Torne o script executável (apenas uma vez)
+chmod +x test.sh
+
+# Execute o teste
+./test.sh
+```
+
+**Python (qualquer SO):**
+```bash
+# Teste completo do backend
+python test_backend.py
+
+# Gerador de tráfego para testes
+python test_traffic.py
+```
+
+### 📋 Teste Manual Passo a Passo
+
+#### 1. **Preparação do Ambiente**
+
+**Instale as dependências:**
+```bash
+# Backend
+cd backend
+pip install -r requirements.txt
+
+# Frontend
+cd ../frontend
+npm install
+```
+
+#### 2. **Teste do Backend**
+
+**Inicie o backend (como administrador):**
+```bash
+cd backend
+
+# Windows (PowerShell como Admin)
+python app.py
+
+# Linux/macOS
+sudo python app.py
+```
+
+**Teste a API em outro terminal:**
+```bash
+# Health check
+curl http://127.0.0.1:5000/api/health
+
+# Captura de pacotes
+curl http://127.0.0.1:5000/api/packets
+```
+
+#### 3. **Teste do Frontend**
+
+**Inicie o frontend:**
+```bash
+cd frontend
+npm run dev
+```
+
+**Acesse no navegador:**
+- URL: `http://localhost:3000`
+- Verifique se a interface carrega
+- Observe se os pacotes aparecem na tabela
+
+#### 4. **Teste de Funcionalidades**
+
+**Gere tráfego de rede:**
+```bash
+# HTTP
+curl http://httpbin.org/get
+curl https://jsonplaceholder.typicode.com/posts/1
+
+# DNS
+nslookup google.com
+
+# ICMP
+ping google.com
+```
+
+**Teste a interface:**
+1. **Clique em um pacote** na tabela
+2. **Observe as camadas OSI** se destacarem
+3. **Use o filtro** para buscar protocolos específicos
+4. **Teste os controles** de refresh automático
+5. **Experimente diferentes intervalos** de atualização
+
+### 🔧 Solução de Problemas
+
+#### ❌ "Permission denied" na captura de pacotes
+```bash
+# Linux/macOS
+sudo python app.py
+
+# Windows
+# Execute PowerShell como Administrador
+```
+
+#### ❌ "Port already in use"
+```bash
+# Encontre processo usando a porta
+netstat -ano | findstr :5000  # Windows
+lsof -i :5000                 # Linux/macOS
+
+# Ou mude a porta
+PORT=5001 python app.py
+```
+
+#### ❌ Frontend não conecta ao backend
+1. Verifique se o backend está rodando
+2. Teste a API diretamente: `curl http://127.0.0.1:5000/api/health`
+3. Verifique o console do navegador (F12)
+
+#### ❌ Nenhum pacote aparece
+1. Gere tráfego manualmente (curl, ping, navegação)
+2. Verifique permissões de administrador
+3. Teste em uma rede ativa
+
+### 📊 Verificação de Sucesso
+
+**✅ Tudo funcionando se:**
+- Backend inicia sem erros
+- API responde em `/api/health` e `/api/packets`
+- Frontend carrega em `http://localhost:3000`
+- Pacotes aparecem na tabela
+- Clique em pacote destaca camadas OSI
+- Filtros e controles funcionam
+- Interface é responsiva
+
+### 🎯 Testes Avançados
+
+**Teste de performance:**
+```bash
+# Execute o gerador de tráfego
+python test_traffic.py
+
+# Monitore a interface para ver muitos pacotes
+```
+
+**Teste responsivo:**
+1. Redimensione a janela do navegador
+2. Use DevTools para simular mobile
+3. Verifique se o layout se adapta
+
+**Teste cross-browser:**
+- Chrome/Chromium
+- Firefox  
+- Safari (macOS)
+- Edge (Windows)
+
+---
+
+**💡 Dica**: Para uma experiência completa, execute `python test_traffic.py` em um terminal separado para gerar tráfego constante enquanto usa o visualizador!
 
 ## 🔧 Configurações Avançadas
 
