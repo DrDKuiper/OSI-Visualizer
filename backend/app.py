@@ -26,13 +26,28 @@ def get_packets():
             packets = get_cached_packets(count)
         else:
             packets = capture_packets(count)
-            
-        logger.info(f"Returning {len(packets)} packets")
-        return jsonify({
-            'packets': packets,
-            'count': len(packets),
-            'timestamp': packets[0]['timestamp'] if packets else None
-        })
+
+        # Log detalhado do conteúdo dos pacotes para debug
+        import pprint
+        logger.info("Pacotes retornados:\n" + pprint.pformat(packets))
+
+        try:
+            return jsonify({
+                'packets': packets,
+                'count': len(packets),
+                'timestamp': packets[0]['timestamp'] if packets else None
+            })
+        except Exception as e:
+            import traceback
+            logger.error('Erro ao serializar resposta JSON: %s', str(e))
+            logger.error('Traceback:\n' + traceback.format_exc())
+            logger.error('Pacote problemático:\n' + pprint.pformat(packets))
+            return jsonify({
+                'error': 'Failed to serialize packets',
+                'message': str(e),
+                'packets': [],
+                'count': 0
+            }), 500
     except Exception as e:
         logger.error(f"Error capturing packets: {str(e)}")
         return jsonify({

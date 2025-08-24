@@ -1,3 +1,15 @@
+# Limpa o cache ao iniciar para evitar objetos antigos não serializáveis
+packet_cache['packets'] = []
+packet_cache['last_update'] = None
+def make_json_serializable(obj):
+    if isinstance(obj, (str, int, float, bool)) or obj is None:
+        return obj
+    elif isinstance(obj, dict):
+        return {k: make_json_serializable(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [make_json_serializable(v) for v in obj]
+    else:
+        return str(obj)
 from scapy.all import sniff, IP, TCP, UDP, ICMP, ARP
 import time
 import threading
@@ -97,25 +109,26 @@ def packet_to_dict(packet, packet_id):
         # Transport layer info
         if packet.haslayer(TCP):
             packet_info.update({
-                "src_port": packet[TCP].sport,
-                "dst_port": packet[TCP].dport,
-                "flags": packet[TCP].flags
+                "src_port": int(packet[TCP].sport),
+                "dst_port": int(packet[TCP].dport),
+                "flags": str(packet[TCP].flags)
             })
         elif packet.haslayer(UDP):
             packet_info.update({
-                "src_port": packet[UDP].sport,
-                "dst_port": packet[UDP].dport
+                "src_port": int(packet[UDP].sport),
+                "dst_port": int(packet[UDP].dport)
             })
         
         # ARP specific info
         if packet.haslayer(ARP):
             packet_info.update({
-                "arp_op": packet[ARP].op,
-                "src_mac": packet[ARP].hwsrc,
-                "dst_mac": packet[ARP].hwdst
+                "arp_op": str(packet[ARP].op),
+                "src_mac": str(packet[ARP].hwsrc),
+                "dst_mac": str(packet[ARP].hwdst)
             })
         
-        return packet_info
+    # Força todos os valores a serem serializáveis (recursivo)
+    return make_json_serializable(packet_info)
         
     except Exception as e:
         logger.error(f"Error processing packet: {str(e)}")
@@ -160,7 +173,8 @@ def get_cached_packets(count=10, max_age_seconds=30):
             (now - packet_cache['last_update']).seconds < max_age_seconds and
             packet_cache['packets']):
             logger.info(f"Returning {len(packet_cache['packets'])} cached packets")
-            return packet_cache['packets'][:count]
+            # Força serialização dos pacotes do cache (recursivo)
+            return [make_json_serializable(pkt) for pkt in packet_cache['packets'][:count]]
     
     # Cache is stale or empty, capture new packets
     return capture_packets(count)
