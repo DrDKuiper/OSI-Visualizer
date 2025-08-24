@@ -1,3 +1,4 @@
-Flask
-scapy
-flask-cors
+Flask==3.0.0
+scapy==2.5.0
+flask-cors==4.0.0
+python-dotenv==1.0.0

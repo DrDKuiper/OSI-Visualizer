@@ -1,43 +1,554 @@
-body {
-    font-family: Arial, sans-serif;
+/* Reset and Base Styles */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
+    box-sizing: border-box;
 }
 
-h1 {
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* App Layout */
+.app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
     text-align: center;
-    margin-top: 20px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
 }
 
-.layer-view {
+.app-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.app-header p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.controls {
     display: flex;
     justify-content: center;
-    margin: 20px 0;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.app-main {
+    flex: 1;
+    padding: 2rem;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.app-footer {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    text-align: center;
+    color: #666;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styles */
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+    color: white;
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #333;
+    border: 2px solid #ddd;
+}
+
+.interval-select {
+    padding: 0.8rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: white;
+    cursor: pointer;
+}
+
+/* Layer View Styles */
+.layer-view {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.layer-view h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.8rem;
+}
+
+.layers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 }
 
 .layer {
-    padding: 10px;
-    margin: 5px;
-    background: #4caf50;
+    padding: 1rem;
+    border-radius: 10px;
     color: white;
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.layer:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+}
+
+.layer.active {
+    animation: pulse 1.5s infinite;
+    border: 3px solid #fff;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+.layer-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.layer-icon {
+    font-size: 1.5rem;
+}
+
+.layer-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.layer-number {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    font-weight: bold;
+}
+
+.layer-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.layer-description {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.layer-activity {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem;
     border-radius: 5px;
-    text-align: center;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
 }
 
-table {
-    margin: 0 auto;
-    width: 80%;
+.layer-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.activity-dot {
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    display: block;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.3; }
+}
+
+.layer-help {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+
+.packet-summary {
+    margin-top: 1.5rem;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
+.packet-summary h3 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.summary-details p {
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+/* Packet Table Styles */
+.packet-table-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.table-header h2 {
+    color: #333;
+    font-size: 1.8rem;
+}
+
+.table-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.filter-input {
+    padding: 0.8rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    width: 200px;
+    transition: border-color 0.3s ease;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.loading-indicator {
+    color: #667eea;
+    font-weight: 600;
+    animation: fadeInOut 1.5s infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.packet-table {
+    width: 100%;
     border-collapse: collapse;
+    background: white;
+    font-size: 0.9rem;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-th {
-    background-color: #4caf50;
+.packet-table th {
+    background: linear-gradient(45deg, #667eea, #764ba2);
     color: white;
+    padding: 1rem 0.8rem;
+    text-align: left;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.packet-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s ease;
+}
+
+.packet-table th.sortable:hover {
+    background: linear-gradient(45deg, #5a6fd8, #6a4190);
+}
+
+.packet-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #eee;
+    transition: all 0.3s ease;
+}
+
+.packet-row {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.packet-row:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: scale(1.01);
+}
+
+.packet-row.selected {
+    background: rgba(102, 126, 234, 0.2);
+    border-left: 4px solid #667eea;
+}
+
+.packet-id {
+    font-weight: bold;
+    color: #667eea;
+}
+
+.timestamp {
+    font-family: monospace;
+    color: #666;
+}
+
+.protocol-badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.address {
+    font-family: monospace;
+    color: #555;
+}
+
+.size {
+    text-align: right;
+    font-family: monospace;
+}
+
+.summary {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table-footer {
+    margin-top: 1rem;
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.empty-state p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(102, 126, 234, 0.3);
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error Message */
+.error-message {
+    background: rgba(231, 76, 60, 0.1);
+    border: 2px solid #e74c3c;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.error-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.error-icon {
+    font-size: 2rem;
+}
+
+.error-text h3 {
+    color: #e74c3c;
+    margin-bottom: 0.5rem;
+}
+
+.error-text p {
+    color: #c0392b;
+    margin-bottom: 1rem;
+}
+
+/* Status */
+.status {
+    font-weight: bold;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.status.loading {
+    background: rgba(241, 196, 15, 0.2);
+    color: #f1c40f;
+}
+
+.status.ready {
+    background: rgba(39, 174, 96, 0.2);
+    color: #27ae60;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-header {
+        padding: 1rem;
+    }
+    
+    .app-header h1 {
+        font-size: 2rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn {
+        justify-content: center;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .table-controls {
+        justify-content: center;
+    }
+    
+    .filter-input {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-main {
+        padding: 1rem;
+    }
+    
+    .layer-view,
+    .packet-table-container {
+        padding: 1rem;
+    }
+    
+    .packet-table {
+        font-size: 0.8rem;
+    }
+    
+    .packet-table th,
+    .packet-table td {
+        padding: 0.5rem 0.3rem;
+    }
 }
