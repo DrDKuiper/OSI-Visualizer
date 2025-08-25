@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import LayerView from "./components/LayerView";
+import OSICard from "./components/OSICard";
+import "bootstrap/dist/css/bootstrap.min.css";
 import PacketTable from "./components/PacketTable";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorMessage from "./components/ErrorMessage";
@@ -108,19 +110,15 @@ function App() {
                 
                 <div className="content-grid">
                     <section className="osi-section">
-                        <LayerView selectedPacket={selectedPacket} />
-                    </section>
-                    
-                    <section className="packets-section">
+                        <h2 className="mb-4">Pacotes Capturados</h2>
                         {loading && packets.length === 0 ? (
                             <LoadingSpinner />
                         ) : (
-                            <PacketTable 
-                                packets={packets} 
-                                onPacketSelect={handlePacketSelect}
-                                selectedPacket={selectedPacket}
-                                loading={loading}
-                            />
+                            packets.length > 0 ? (
+                                packets.map((packet) => <OSICard key={packet.id} packet={packet} />)
+                            ) : (
+                                <div className="alert alert-info">Nenhum pacote capturado.</div>
+                            )
                         )}
                     </section>
                 </div>
